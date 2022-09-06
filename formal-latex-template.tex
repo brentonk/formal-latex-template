@@ -1,0 +1,240 @@
+\documentclass[12pt]{article}
+
+% -------------------- Packages -------------------- %
+
+% Font/input basics
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+
+% Critical math packages
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+
+% Tools for theorems, including restatement capability
+\usepackage{amsthm}
+\usepackage{thmtools}
+\usepackage{thm-restate}
+
+% Local table of contents capability
+\usepackage{etoc}
+
+% General formatting
+\usepackage[margin=1in]{geometry}
+\usepackage{setspace}
+\usepackage{booktabs}
+\usepackage[labelsep=period,font=small,labelfont=bf,margin=5ex]{caption}
+
+% Bibliography and references
+\usepackage{multibib}
+\usepackage[sort]{natbib}
+\usepackage[bookmarks=false]{hyperref}
+
+% -------------------- Setup -------------------- %
+
+% Don't highlight references/links
+\hypersetup{
+  colorlinks=true,
+  citecolor=black,
+  linkcolor=black,
+  urlcolor=black
+}
+
+% Set up natbib
+\bibpunct{(}{)}{;}{a}{}{,}  % citations like (Fearon 1995; Powell 1996, 1999)
+\def\citeapos#1{\citeauthor{#1}'s (\citeyear{#1})}  % Sartori's (2002)
+\renewcommand{\harvardurl}[1]{\textbf{URL:} \url{#1}}  % less-bad URLs in bibliography
+\newcites{app}{Additional References}
+
+% Theorem environments (add more if needed)
+\declaretheorem{lemma}
+\declaretheorem{corollary}
+\declaretheorem{proposition}
+
+% -------------------- Metadata -------------------- %
+
+\title{A \LaTeX\ Template for Formal Papers in Political Science%
+  \thanks{I thank 14 years of accumulated Google and Stack Overflow searches for directing me to the various packages I needed to make this template.}
+}
+\author{Brenton Kenkel%
+  \thanks{Assistant Professor, Department of Political Science, Vanderbilt University. \url{brenton.kenkel@vanderbilt.edu}.}
+  \and Fake Second Author%
+  \thanks{I only put this here because it annoys me when people don't use \texttt{\textbackslash{}and} to separate author names in coauthored \LaTeX\ documents.}
+}
+
+\begin{document}
+
+% -------------------- Title page -------------------- %
+
+\setcounter{page}{0}
+\maketitle
+\thispagestyle{empty}
+
+\begin{abstract}
+  This is my abstract.
+  It is 150 or fewer words, per common journal requirements.
+  It succinctly states my research question and main results in plain language.
+\end{abstract}
+
+% -------------------- Paper body -------------------- %
+
+\clearpage
+\doublespacing
+
+My introduction would go here.
+I wouldn't waste precious space on an unnecessary ``Introduction'' section header.
+Papers will be cited here \citep{walter1997critical}.
+
+\section{The Math}
+
+I might write some equations that I want to refer to later:
+\begin{equation}
+  \label{eq:envelope}
+  \frac{d U(x^*(\alpha), \alpha)}{d \alpha} = \frac{\partial U(x^*(\alpha), \alpha)}{\partial \alpha}.
+\end{equation}
+I'll use \verb|\autoref| to do all my references, including when I refer to \autoref{eq:envelope}.
+
+I'll also state some formal results whose proofs live in the Appendix.
+
+\begin{restatable}{proposition}{resMaximizer}
+  \label{res:maximizer}
+  Assume the agent's objective is to choose $x$ to maximize
+  \begin{displaymath}
+    U(x, \alpha) = - (x + 2 \alpha)^2,
+  \end{displaymath}
+  where $\alpha \in \mathbb{R}$ is exogenous.
+  The optimal choice is $x^* = - 2 \alpha$.
+\end{restatable}
+
+Ordinarily you would make this with code like:
+\singlespacing
+\begin{verbatim}
+\begin{proposition}
+  \label{res:maximizer}
+  Assume the agent's objective is to choose $x$ to maximize ...
+\end{proposition}
+\end{verbatim}
+\doublespacing
+Instead I use the \verb|restatable| environment as follows:
+\singlespacing
+\begin{verbatim}
+\begin{restatable}{proposition}{resMaximizer}
+  \label{res:maximizer}
+  Assume the agent's objective is to choose $x$ to maximize ...
+\end{restatable}
+\end{verbatim}
+\doublespacing
+The first argument to the \verb|restatable| environment tells it which theorem environment to use.
+I've set up this template so the options are \verb|proposition|, \verb|lemma|, and \verb|corollary|, but it's easy to add more.
+The second argument specifies the command you want to use to restate the result later on.
+So when I want to reprint the exact text of the proposition, I'll use \verb|\resMaximizer*|, as you'll see below in the source code for the Appendix.
+I always start my commands with \verb|res| (as in ``result'') but that's just personal style.
+
+One last note: we can refer to the result by its full name using \verb|\autoref{res:maximizer}|, where \verb|res:maximizer| is the label I set just after declaring the environment.
+This shows up as \autoref{res:maximizer}.
+It's convenient to do this instead of the usual \verb|Proposition~\ref{res:maximizer}|, because then I can change propositions to lemmas (or vice versa) without having to go through and manually edit references.
+
+
+\section{Tables and Figures}
+
+\begin{table}[tbp]
+  \centering
+  \begin{tabular}{llc}
+    \toprule
+    Letter & Name & Brenton's rating \\
+    \midrule
+    $\alpha$ & alpha & 8.4 \\
+    $\beta$ & beta & 9.1 \\
+    $\chi$ & chi & 4.6 \\
+    \bottomrule
+  \end{tabular}
+  \caption{My ratings of a few Greek letters.  I haven't included all of the Greek letters because I am lazy.  This caption is excessively long in order to show you how excessively long captions are formatted.}
+  \label{tab:greek}
+\end{table}
+
+I use the \verb|caption| package to make the caption formatting less ugly than the \LaTeX\ default.
+Similarly, I use \verb|booktabs| to make tables less ugly.
+You can see the results in \autoref{tab:greek}.
+As you should have come to expect by now, I made that reference via \verb|\autoref{tab:greek}|, not via the uglier and less-robust \verb|Table~\ref{tab:greek}|.
+
+
+\singlespacing
+\bibliography{references}
+\bibliographystyle{apsr}
+
+
+% -------------------- Appendix --------------------
+
+\clearpage
+\appendix
+\onehalfspacing
+
+\renewcommand{\partname}{}
+\renewcommand{\thepart}{}
+\part{Appendix}
+\localtableofcontents
+
+% Reset page number and equation, float, and result numbers
+\setcounter{page}{1}
+\setcounter{lemma}{0}
+\setcounter{corollary}{0}
+\setcounter{proposition}{0}
+\setcounter{equation}{0}
+
+% Prepend new equation, float, and result numbers with "A" to show they originate in the Appendix
+\renewcommand{\thelemma}{A.\arabic{lemma}}
+\renewcommand{\thecorollary}{A.\arabic{corollary}}
+\renewcommand{\theproposition}{A.\arabic{proposition}}
+\renewcommand{\theequation}{A.\arabic{equation}}
+\renewcommand{\thefigure}{A.\arabic{figure}}
+\renewcommand{\thetable}{A.\arabic{table}}
+
+\section{Proofs}
+
+I might want to cite some papers that I didn't cite in the main text \citepapp{banks1990equilibrium}.
+To help keep my word count low and my eventual copy editors happy, I don't want those citations showing up in the main text, so I'll create a separate bibiliography for the Appendix.
+I just append \verb|app| to the ordinary citation commands.
+For example, I made the citation in this paragraph with \verb|\citepapp{banks1990equilibrium}|.
+
+\subsection{Proof of \autoref{res:maximizer}}
+
+To prove the result, I'll rely on a couple of auxiliary lemmas.
+These will be newly stated here, and their numbers will be prepended with ``A'' to show that they originate in the Appendix rather than the main text.
+(I still put them in \verb|restatable| environments to save myself trouble in case I end up moving them into the body later, but this isn't necessary.)
+
+\begin{restatable}{lemma}{resConcave}
+  \label{res:concave}
+  $U$ is strictly concave in $x$.
+\end{restatable}
+
+\begin{proof}
+  We have
+  \begin{equation}
+    \label{eq:first-partial}
+    \frac{\partial U(x, \alpha)}{\partial x} = -2 (x + 2 \alpha)
+  \end{equation}
+  and thus $\frac{\partial^2 U(x, \alpha)}{\partial x^2} = -2 < 0$.
+\end{proof}
+
+\begin{restatable}{lemma}{resCriticalPoint}
+  \label{res:critical-point}
+  $\frac{\partial U(x, \alpha)}{\partial x} = 0$ if and only if $x = -2 \alpha$.
+\end{restatable}
+
+\begin{proof}
+  \autoref{eq:first-partial} implies that the condition $\frac{\partial U(x, \alpha)}{\partial x} = 0$ is equivalent to $x = -2 \alpha$.
+\end{proof}
+
+Now we can prove \autoref{res:maximizer}.
+To restate the result, I'll use the command \verb|\resMaximizer*|, where \verb|resMaximizer*| is the command name I supplied to the second argument of the \verb|restatable| environment.
+
+\resMaximizer*
+
+\phantomsection
+\addcontentsline{toc}{section}{Additional References}
+\singlespacing
+\bibliographystyleapp{apsr}
+\bibliographyapp{references}
+
+\end{document}
